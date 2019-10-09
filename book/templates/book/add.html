@@ -1,0 +1,87 @@
+{% extends 'book/base.html' %}
+{% block content %}
+<div class="container-fluid">
+{{ form.errors }}
+{{ form.non_field_errors }}
+<div class="container">
+<div class="row">
+<div class="col-6">
+<h2>Add</h2>
+{% if msg %}
+<div class="alert alert-success" role="alert">
+    {{ msg }}
+</div>
+{% endif %}
+<form method="POST" class="post-form">
+    {% csrf_token %}
+    <div class="form-group">
+        {{ form.title.label }} {{ form.title }}
+        <hr>
+        <p></p>
+        <div class="alert alert-primary" role="alert">
+            Select existing author(s) or/and enter new ones
+        </div>
+        <p>Existing authors</p>
+        {{ form.authors }}<br>
+        {{ new_author_formset.management_form }}
+        <div id="form_set1">
+            <p><strong>New author</strong></p>
+            {% for form in new_author_formset.forms %}
+            {{ form }}
+            {% endfor %}
+        </div>
+        <br>
+        <input type="button" class="btn btn-warning" value="Add more authors" id="add_more1"><br>
+        <div id="empty_form1" style="display:none">
+            {{ new_author_formset.empty_form }}
+        </div>
+        <hr>
+        {{ form.published_date.label }} YYYY-MM-DD{{ form.published_date }}
+        <hr>
+        <div class="alert alert-primary" role="alert">
+            Select existing industry identifier(s) or/and enter new ones
+        </div>
+        <p><strong>Existing industry identifiers</strong></p>
+        {{ form.industry_identifiers }}
+        {{ new_industry_identifier_formset.management_form }}
+        <div id="form_set2">
+            <p><strong>New industry identifier</strong></p>
+            {% for form in new_industry_identifier_formset.forms %}
+            {{ form }}<br>
+            {% endfor %}
+        </div>
+        <input type="button" class="btn btn-warning" value="Add more identifiers" id="add_more2"><br>
+        <div id="empty_form2" style="display:none">
+            {{ new_industry_identifier_formset.empty_form }}<br>
+        </div>
+        <hr>
+        {{ form.page_count.label }}{{ form.page_count }}
+        <hr>
+        <div class="alert alert-primary" role="alert">
+            Select existing thumbnails URL or enter new ones
+        </div>
+        <p><strong>Existing image links</strong></p>
+        {{ form.image_links.label }}{{ form.image_links }}<br>
+        <p><strong>New image links pair</strong></p>
+        {{ form.new_image_link_thumbnail.label }}{{ form.new_image_link_thumbnail }}
+        {{ form.new_image_link_small_thumbnail.label }}{{ form.new_image_link_small_thumbnail }}
+        <hr>
+        {{ form.language.label }}{{ form.language }}
+        <br><button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</form>
+<script type="text/javascript">
+    $('#add_more1').click(function() {
+        var form_idx = $('#id_form-TOTAL_FORMS').val();
+        $('#form_set1').append($('#empty_form1').html().replace(/__prefix__/g, form_idx));
+        $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    });
+</script>
+<script type="text/javascript">
+    $('#add_more2').click(function() {
+        var form_idx = $('#id_form-TOTAL_FORMS').val();
+        $('#form_set2').append($('#empty_form2').html().replace(/__prefix__/g, form_idx));
+        $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    });
+</script>
+{% endblock %}

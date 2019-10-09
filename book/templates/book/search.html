@@ -1,0 +1,74 @@
+{% extends 'book/base.html' %}
+{% block content %}
+<div class="container-fluid">
+    {{ form.errors }}
+    {{ form.non_field_errors }}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h2>Search</h2>
+                <form method="POST" class="post-form">
+                    {% csrf_token %}
+                    {% for f in form %}
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">{{ f.label }}</label>
+                        {{ f }}
+                        <small id="{{ f.auto_id}}" class="form-text text-muted">{{ f.help_text }}</small>
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="save btn btn-primary">Search</button>
+                </form>
+            </div>
+            <div class="col">
+                {% if not found_books %}
+                <div class="alert alert-primary" role="alert">
+                    Results will be shown here
+                </div>
+                {% else %}
+                {% if found_books|length < 0 %}
+                <div class="alert alert-danger" role="alert">
+                    No results found! pusto
+                </div>
+                {% else %}
+                <div class="alert alert-success" role="alert">
+                    Found {{ found_books|length }} results
+                </div>
+                {% endif %}
+                {% endif %}
+                {% for b in found_books %}
+                <div class="media mt-lg-2">
+                    {% if b.image_links.all.0 %}
+                    <img src="{{ b.image_links.all.0 }}" class="mr-3" alt="{{ b.title }}">
+                    {% else %}
+                    <img src="https://picsum.photos/id/83/128/183?grayscale&blur=9" class="mr-3" alt="{{ b.title }}">
+                    {% endif %}
+                    <div class="media-body">
+                        <h4 class="mt-0 text-primary">{{ b.title }}</h4>
+                        <h5 class="mt-1">{{ b.authors.all|join:", " }}</h5>
+                        <div>
+                            <ul class="list-group list-group-horizontal py-2">
+                                {% for ii in b.industry_identifiers.all %}
+                                <li class="list-group-item bg-light"><b>{{ ii.identifier_type }}</b> {{ ii.identifier }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Published date {{ b.published_date }}</li>
+                            <li class="list-group-item">Page count {{ b.page_count }}</li>
+                            <li class="list-group-item">Language {{b.language }}</li>
+                        </ul>
+                        {% for im in b.image_links.all %}
+                        <small>
+                        <samp class="text-secondary">{{ im.thumbnail }}</samp>
+                        <samp class="text-secondary">{{ im.small_thumbnail }}</samp></small>
+                        {% endfor %}
+                    </div>
+                </div>
+                <hr>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

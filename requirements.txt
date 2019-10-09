@@ -1,0 +1,7 @@
+django
+django-rest-framework
+django-filter
+django-heroku
+pygments
+gunicorn
+requests
