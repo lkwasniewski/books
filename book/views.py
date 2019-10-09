@@ -68,11 +68,11 @@ def search(request):
             for f in form.cleaned_data:
                 if len(form.cleaned_data[f]) > 0:
                     if f == 'title':
-                        kwargs['title__contains'] = form.cleaned_data[f]
+                        kwargs['title__icontains'] = form.cleaned_data[f]
                     if f == 'authors':
-                        kwargs['authors__name__contains'] = form.cleaned_data[f]
+                        kwargs['authors__name__icontains'] = form.cleaned_data[f]
                     if f == 'language':
-                        kwargs['language__contains'] = form.cleaned_data[f]
+                        kwargs['language__icontains'] = form.cleaned_data[f]
             if len(form.cleaned_data['published_date_from']) >= 4 and len(form.cleaned_data['published_date_to']) >= 4:
                 kwargs['published_date__range'] = [form.cleaned_data['published_date_from'], form.cleaned_data['published_date_to']]
             elif len(form.cleaned_data['published_date_from']) >= 4 and len(form.cleaned_data['published_date_to']) < 4:
